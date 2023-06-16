@@ -1,0 +1,140 @@
+{% extends "index.html" %}
+{% block contenido %}
+<section class="section m-5">
+    <button type="button" class="login" id="login" data-bs-toggle="modal"
+        data-bs-target="#loginModal">Registrar Profesor</button>
+    <!------------- Tabla Profesores ------------->
+    <div class="container mt-5">
+        <h1>Profesores</h1>
+        <table class="table">
+            <!------------- Encabezado Tabla ------------->
+            <thead class="align-items-center text-center"> 
+                <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contraseña</th>
+                <th scope="col">Calificación</th>
+                <th scope="col" colspan="2">Acciones</th>
+                </tr>
+            </thead>
+            <!------------- Cuerpo Tabla ------------->
+            <tbody>
+                {% for profesor in profesores %}
+                <tr>
+                    <form action="{{url_for('modificar')}}" method="POST" enctype="multipart/form-data">
+                        <input hidden value="{{profesor[0]}}" name="id">
+                        <td scope="row">
+                            <input type="text" value="{{profesor[1]}}" class="form-control" name="nombre">
+                        </td>
+                        <td scope="row">
+                            <input type="text" value="{{profesor[2]}}" class="form-control" name="apellido">
+                        </td>
+                        <td scope="row">
+                            <input type="email" value="{{profesor[3]}}" class="form-control" name="email">
+                        </td>
+                        <td scope="row">
+                            <input type="password" value="{{profesor[4]}}" class="form-control" name="password">
+                        </td>
+                        <td scope="row">
+                            <input class="calificacion" hidden value="{{profesor[5]}}" name="calificacion">
+                            <div class="stars-outer">
+                                <div class="stars-inner"></div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <button type="submit" class="btn btn-custom">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </form>  
+                    <td class="text-center">
+                        <button type="submit" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#eliminarModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+                            </svg>
+                        </button>
+                    </td>
+                    <!------------- Formulario Eliminar ------------->
+                    <div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <form id="eliminar-form" class="formulario" action="{{url_for('eliminar')}}" method="POST"
+                                        enctype="multipart/form-data">
+                                            <input type="hidden" name="id" value="{{profesor[0]}}">
+                                            <div class="form-group my-3 text-center">
+                                                <h4 class="mb-5">¿Desea eliminar este profesor?</h4>
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="submit" class="btn btn-primary mt-3 w-25 botones m-3">
+                                                Aceptar
+                                                </button>
+                                                <button type="button" class="btn btn-primary mt-3 w-25 cancelar m-3" data-bs-dismiss="modal">
+                                                Cancelar
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!------------- Modal Registro ------------->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+    aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div class="container">
+                <!------------- Formulario Registro ------------->
+                <form class="custom-form" action="{{url_for('registro')}}" method="POST" enctype="multipart/form-data">
+                    <h1 class="h3 mb-3 fw-normal">Registro</h1>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="nombre" required>
+                        <label for="floatingInput">Nombre</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="apellido" required>
+                        <label for="floatingInput">Apellido</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="email" class="form-control" name="email" required>
+                        <label for="floatingInput">Email</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" name="password" required>
+                        <label for="floatingInput">Password</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="calificacion" required>
+                        <label for="floatingPassword">Calificación</label>
+                    </div>
+                    <div class="d-flex justify-content-center flex-column align-items-center">
+                        <button class="login py-2 m-5" type="submit">Enviar</button>
+                    </div>             
+                </form>
+            </div>
+            </div>  
+        </div>  
+        </div>
+    </div>
+</section>
+{% endblock %}
+
